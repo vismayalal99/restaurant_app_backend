@@ -73,7 +73,20 @@ async function editImage(id,imagename){
 
 }
 
+async function deleteImage(id){
+    const db=makeDblib.makeDb();
+
+    try{
+        const deleteImage= await db.query(`DELETE FROM IMAGESLIDER WHERE ID=${id}`)
+        return deleteImage
+    }
+    catch(err){
+        return err
+    }
+    finally{
+        await db.close()
+    }
+}
 
 
-
-module.exports={getImageData,addImageData,getEditImage,editImage}
+module.exports={getImageData,addImageData,getEditImage,editImage,deleteImage}
