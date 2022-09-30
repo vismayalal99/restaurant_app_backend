@@ -5,7 +5,7 @@ async function getImageData(req, res) {
 
     try {
          const data=  await imageSlider.getImageData()
-         return res.status(200).send({success:true,message:"Success",data:data})   
+         return res.status(200).send({ success:true,message:"Success",data:data })   
     } 
   
     catch (err) {
@@ -20,7 +20,7 @@ async function getImageData(req, res) {
     try{
      
         const data =await imageSlider.addImageData(req.file.originalname)
-        return res.status(200).send({success:true,message:"successfully uploaded"})
+        return res.status(200).send({success:true,message:"Successfully Uploaded"})
 
     }
     catch(err){
@@ -49,7 +49,7 @@ async function getImageData(req, res) {
       
        const data= await imageSlider.editImage(req.query.id,req.file.originalname)
        console.log(data);
-      return res.status(200).send({success:true,message:"successfully updated",data:data})
+      return res.status(200).send({success:true,message:"Successfully Updated"})
 
     }
     catch(err){
@@ -58,4 +58,19 @@ async function getImageData(req, res) {
 
   }
 
-  module.exports={getImageData,uploadImage,getEditImage,editImage}
+
+  async function deleteImage(req,res){
+    console.log("test");
+    try{
+      await imageSlider.deleteImage(req.query.id)
+      return res.status(200).send({success:true,message:"SuccessFully Deleted"})
+    }
+
+    catch(err){
+      console.log(err);
+        return res.status(500).send({success:false,message:err})
+    }
+
+  }
+
+  module.exports={getImageData,uploadImage,getEditImage,editImage,deleteImage}
