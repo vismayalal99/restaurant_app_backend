@@ -32,7 +32,7 @@ async function getImageData(req, res) {
   async function getEditImage(req,res){
    
         const id=req.query.id
-
+        console.log(id);
         try{
           const data= await imageSlider.getEditImage(id)
           return res.status(200).send({success:true,message:"success",data:data})
@@ -43,22 +43,26 @@ async function getImageData(req, res) {
         
   }
 
+
+
   async function editImage(req,res){
      
     try{
       
        const data= await imageSlider.editImage(req.query.id,req.file.originalname)
        console.log(data);
-      return res.status(200).send({success:true,message:"Successfully Updated"})
+       return res.status(200).send({success:true,message:"Successfully Updated"})
 
     }
     catch(err){
-      return res.status(500).send({success:false,message:err})
+      return res.status(500).send({success:false,message:"Please Upload the Image"})
     }
 
   }
 
 
+
+  
   async function deleteImage(req,res){
     console.log("test");
     try{

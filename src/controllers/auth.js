@@ -10,23 +10,29 @@ async function signup(req, res) {
     let validateError = false;
     console.log(username);
     if (!username) {
-      res.status(200).send({ success: false, message: "Invalid username" });
+      res.status(400).send({ success: false, message: "Enter valid username" });
       validateError = true;
     }
-    if (!email) {
-      res.status(200).send({ success: false, message: "Invalid Email" });
+   else if (!email) {
+      res.status(400).send({ success: false, message: "Enter valid Email" });
       validateError = true;
     }
 
-    if (!password) {
-      res.status(200).send({ success: false, message: "Invalid Password" });
+   else if (!password) {
+      res.status(400).send({ success: false, message: "Enter valid Password" });
       validateError = true;
     }
     
-    if (!validateError) {
-      await postData.signup(username, email, password);
+    else if (!validateError) {
+    const data=  await postData.signup(username, email, password);
+   
+    if(data){
       return res.status(200).json({ success: true, message: "User is registered successfully"});
     }
+    else{
+      return res.status(400).json({ success: false, message: "Email is alredy exist"});
+    }
+  }
 
   } 
   catch (err) {
@@ -40,6 +46,7 @@ async function signup(req, res) {
 async function login(req, res) {
 
   try {
+    console.log("login");
     const password = req.body.password;
     const email = req.body.email;
     let data = await postData.login(email,password) ;

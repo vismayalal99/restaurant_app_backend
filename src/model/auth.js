@@ -5,10 +5,14 @@ async function signup(username,email,password){
     const db=makeDblib.makeDb();
    
     try{
+       
+        
         const signupUser=await db.query("INSERT INTO signup_user(username,email,password) VALUES(?,?,?)",
         [username,email,password]);
-        console.log(signupUser)
+        console.log(signupUser);
+     
         return true
+     
     }
     catch(err){
         console.log(err)
