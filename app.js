@@ -1,11 +1,9 @@
 const express=require('express');
 const app=express();
-const router=require("./src/routes/signupRoute");
+const router=require("./src/routes/routes");
 const config=require("./config")
 
-// const cors=require('cors')
-// app.use(cors())
-console.log(process.env.DB_HOST)
+
 app.use(express.json())
 
 
@@ -27,8 +25,3 @@ app.listen(config.PORT,config.HOST,()=>{
     console.log(`App listening port is ${config.HOST}:${config.PORT}`);
 })
 
-
-// app.listen(7000,(err)=>{
-//     console.log(err);
-//     console.log("ok");
-// })

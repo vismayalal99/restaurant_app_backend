@@ -2,10 +2,10 @@ const express=require('express')
 const {validateToken}=require("../middleware/auth")
 const router=express.Router();
 const authRoute=require("../controllers/auth");
-const imageSlider=require("../controllers/ImageSlider");
-const images=require("../middleware/ImageSlider");
-const menuItems=require("../controllers/FoodMenu");
-const order=require("../controllers/PlaceOrder")
+const imageSlider=require("../controllers/imageSlider");
+const images=require("../middleware/imageSlider");
+const menuItems=require("../controllers/foodMenu");
+const order=require("../controllers/placeOrder")
 
 
 // ------------ Authentication -------
@@ -15,6 +15,8 @@ router.post('/signup',authRoute.signup);
 router.post('/login',authRoute.login);
 
 router.get('/getcontent',validateToken, authRoute.getData);
+
+
 
 //   ---------- Image Slider ------------
 
@@ -68,6 +70,6 @@ router.patch('/cart/quantitydecrement',order.quantityDecrement);
 
 router.post('/orderall',order.orderAll);
 
-
+router.get('/getuserdata',order.getUserData)
 
 module.exports=router

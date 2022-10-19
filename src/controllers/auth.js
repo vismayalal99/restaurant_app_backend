@@ -7,6 +7,8 @@ async function signup(req, res) {
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
+    const lastname=req.body.lastname;
+    const phone=req.body.phone
     let validateError = false;
     console.log(username);
     if (!username) {
@@ -22,9 +24,17 @@ async function signup(req, res) {
       res.status(400).send({ success: false, message: "Enter valid Password" });
       validateError = true;
     }
+    else if (!lastname) {
+      res.status(400).send({ success: false, message: "Enter valid LastName" });
+      validateError = true;
+    }
+    else if (!phone) {
+      res.status(400).send({ success: false, message: "Enter valid PhoneNo" });
+      validateError = true;
+    }
     
     else if (!validateError) {
-    const data=  await postData.signup(username, email, password);
+    const data=  await postData.signup(username, email, password,lastname,phone);
    
     if(data){
       return res.status(200).json({ success: true, message: "User is registered successfully"});

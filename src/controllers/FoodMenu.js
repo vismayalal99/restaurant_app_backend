@@ -1,4 +1,4 @@
-const menu_item=require("../model/FoodMenu")
+const menu_item=require("../model/foodMenu")
 
  async function mainMenu(req,res){
     console.log("test");
@@ -181,10 +181,6 @@ async function getEditMenu(req,res){
 
 async function editMenu(req,res){
   const id =req.query.id
-  console.log(id);
- // const image=req.file;
-  console.log(req.file);
-  console.log(req.body);
   const menuItem =req.body.menuItem;
   const price =req.body.price;
   const category=req.body.category;
@@ -198,9 +194,7 @@ async function editMenu(req,res){
     img = req.file.originalname
   }
 
-
  try{
- 
     const data= await menu_item.editMenu(id,img,menuItem,price,category,avail)
     return res.status(200).send({success:true,message:"MenuItem Updated Successfully"})
  
@@ -211,8 +205,9 @@ async function editMenu(req,res){
  }
 }
 
-async function deleteMenu(req,res){
-    
+
+
+async function deleteMenu(req,res){ 
   const id =req.query.id
 
   try{
