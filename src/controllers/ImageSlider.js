@@ -1,4 +1,4 @@
-const imageSlider=require("../model/ImageSlider")
+const imageSlider=require("../model/imageSlider")
 
 
 async function getImageData(req, res) {
@@ -48,7 +48,6 @@ async function getImageData(req, res) {
   async function editImage(req,res){
      
     try{
-      
        const data= await imageSlider.editImage(req.query.id,req.file.originalname)
        console.log(data);
        return res.status(200).send({success:true,message:"Successfully Updated"})
@@ -64,7 +63,6 @@ async function getImageData(req, res) {
 
   
   async function deleteImage(req,res){
-    console.log("test");
     try{
       await imageSlider.deleteImage(req.query.id)
       return res.status(200).send({success:true,message:"SuccessFully Deleted"})

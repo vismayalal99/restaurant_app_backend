@@ -1,14 +1,13 @@
 
 const makeDblib=require("../library/db")
 
-async function signup(username,email,password){
+async function signup(username,email,password,lastname,phone){
     const db=makeDblib.makeDb();
    
     try{
        
-        
-        const signupUser=await db.query("INSERT INTO signup_user(username,email,password) VALUES(?,?,?)",
-        [username,email,password]);
+        const signupUser=await db.query("INSERT INTO signup_user(username,last_name,email,password,phone_no) VALUES(?,?,?,?,?)",
+        [username,lastname,email,password,phone]);
         console.log(signupUser);
      
         return true
@@ -48,7 +47,6 @@ async function getData(){
     const db=makeDblib.makeDb();
 
     try{
-
         const content= await db.query("SELECT * FROM content");
         console.log(content)
         return content

@@ -1,5 +1,5 @@
 
-const order=require("../model/PlaceOrder")
+const order=require("../model/placeOrder")
 
 
 async function placeOrder(req,res){
@@ -8,17 +8,16 @@ async function placeOrder(req,res){
     const lastName=req.body.lastName;
     const email=req.body.email;
     const phoneNo=req.body.phoneNo;
-   
     const menuItem=req.body.menuItem;
     const price=req.body.price;
     const quantity=req.body.quantity;
+    const section=req.body.section
    
     try{
-
-        
+       
         if(firstName !="" && lastName !="" && email !="" && phoneNo !="" && menuItem !="" && price !="" && quantity !=""){
             
-            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItem,price,quantity);
+            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItem,price,quantity,section);
            
             if(data){
             return res.status(200).send({success:true,message:"Order Placed"})
@@ -47,16 +46,14 @@ async function orderAll(req,res){
     const lastName=req.body.lastName;
     const email=req.body.email;
     const phoneNo=req.body.phoneNo;
-    const date=req.body.date;
     const menuItems=req.body.cartDatas;
     const total=req.body.total
    
-
     try{
        
         if(firstName !="" && lastName !="" && email !="" && phoneNo !="" && menuItems !="" ){
             
-            const data =await order.orderAll(firstName,lastName,email,phoneNo,menuItems,total)
+            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItems,total)
             console.log("data"+data);
            
             if(data){
@@ -120,4 +117,18 @@ async function quantityDecrement(req,res){
 
 }
 
-module.exports={placeOrder,orderDetails,quantityIncrement,quantityDecrement,orderAll}
+
+async function getUserData(req,res){
+    const id=req.query.id
+    try{
+        const data=await order.getUserData(id)
+        return res.status(200).send({success:true,message:"success",data:data})
+    }
+    catch(err){
+        return res.status(500).send({success:false,message:err})
+    }
+
+}
+
+
+module.exports={placeOrder,orderDetails,quantityIncrement,quantityDecrement,orderAll,getUserData}
