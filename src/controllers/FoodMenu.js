@@ -17,22 +17,6 @@ const menu_item=require("../model/foodMenu")
 
 
 
-  async function startersMenu(req,res){
-    console.log("test");
-    try{
-      const data=await menu_item.getStartersMenuItems()
-      return res.status(200).send({success:true,message:"Success",data:data})
-    }
-
-    catch(err){
-      console.log(err);
-        return res.status(500).send({success:false,message:err})
-    }
-
-  }
-
-
-
 
   async function addToCart(req,res){
 
@@ -222,6 +206,6 @@ async function deleteMenu(req,res){
 }
 
 
-module.exports={mainMenu,startersMenu,addToCart,getCartData,deleteCartData,
+module.exports={mainMenu,addToCart,getCartData,deleteCartData,
                 deleteCartDataAll,menu_items,menuCategory,addMenuItems,getEditMenu,editMenu,deleteMenu
               }
