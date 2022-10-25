@@ -34,7 +34,7 @@ async function login(email,password){
     }
     catch(err){
         console.log(err)
-        return err
+        return false
     }
     finally {
         await db.close()

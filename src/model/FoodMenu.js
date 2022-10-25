@@ -7,7 +7,7 @@ async function getMainMenuItems(){
 
     try{
 
-        const menuItem= await db.query("SELECT * FROM menu_items WHERE category_id=1");
+        const menuItem= await db.query("SELECT * FROM menu_items ");
         return menuItem
     }
     catch(err){
@@ -20,22 +20,7 @@ async function getMainMenuItems(){
 
 }
 
-async function getStartersMenuItems(){
-    const db=makeDblib.makeDb();
 
-    try{
-        const menuItem= await db.query("SELECT * FROM menu_items WHERE category_id=2");
-        return menuItem
-    }
-    catch(err){
-        console.log(err);
-        return err
-    }
-    finally{
-        await db.close()
-    }
-
-}
 
 
 async function addToCart(user_id,menu_id,image,name,price,quantity,availability){
@@ -213,8 +198,6 @@ async function deleteMenuitem(id){
 
 
 
-module.exports={getMainMenuItems,getStartersMenuItems,
-                addToCart,getCartData,deleteCartData,
-                deleteCartDataAll,getmenuitems,
+module.exports={getMainMenuItems,addToCart,getCartData,deleteCartData,deleteCartDataAll,getmenuitems,
                 getCategory,addMenuItems,getEditMenu,editMenu,deleteMenuitem
             }

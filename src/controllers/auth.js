@@ -74,14 +74,14 @@ async function login(req, res) {
   } 
 
   catch (err) {
-    return res.status(500).json({ message: "error" });
+    return res.status(500).json({ message: err });
   }
 }
 
 
 
 async function getData(req, res) {
-
+console.log("auth");
   try {
        const data=  await postData.getData();
        return res.status(200).send({success:true,message:"Success",data:data})

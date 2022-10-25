@@ -3,9 +3,9 @@ const makeDblib=require("../library/db");
 
 
 
-async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,quantity,section){
+async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,payment,quantity,section){
     const db=makeDblib.makeDb();
-
+    const total =price* quantity
     try{
        
         const  customerData=await db.query("SELECT * FROM customer_data WHERE email_address = ? AND phone_no = ? ",[email,phoneNo]);
@@ -17,17 +17,18 @@ async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,quanti
         const customerDetails= await db.query("SELECT id,first_name FROM customer_data WHERE email_address=?",[email]);
         const  customer_id= customerDetails[0].id
         const customer_name=customerDetails[0].first_name
-        const order = await db.query("INSERT INTO orders (customer_id,total_amount)VALUES(?,?)",[customer_id,price]);
-        
+        const paymentMethod = await db.query("SELECT method FROM payment_method WHERE id=?",[parseInt(payment)]);
+       
         if(section =="buyNowItems"){
-         
-            const orderDetails= await db.query("INSERT INTO order_details(order_id,customer_name,item_name,quantity,amount) VALUES(?,?,?,?,?)",
-                                                [order.insertId, customer_name,menuItem,quantity,price ] )
+            const order = await db.query("INSERT INTO orders (customer_id,total_amount,payment_method_id)VALUES(?,?,?)",[customer_id,total,parseInt(payment)]);
+           
+            const orderDetails= await db.query("INSERT INTO order_details(order_id,customer_name,item_name,quantity,amount,payment_methods) VALUES(?,?,?,?,?,?)",
+                                                [order.insertId, customer_name,menuItem,quantity,price,paymentMethod[0].method] )
         }
         else{
-          
-            const orderDetails= await db.query("INSERT INTO order_details(order_id,customer_name,item_name,quantity,amount) VALUES ?",
-            [menuItem.map(item => [order.insertId,customer_name, item.name,item.quantity,item.price])]);
+            const order = await db.query("INSERT INTO orders (customer_id,total_amount,payment_method_id)VALUES(?,?,?)",[customer_id,price,parseInt(payment)]);
+            const orderDetails= await db.query("INSERT INTO order_details(order_id,customer_name,item_name,quantity,amount,payment_methods) VALUES ?",
+            [menuItem.map(item => [order.insertId,customer_name, item.name,item.quantity,item.price,paymentMethod[0].method])]);
 
         }
 
@@ -35,7 +36,7 @@ async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,quanti
     }
     catch(err){
         console.log(err);
-        return false
+        return true
     }
 
     finally{
@@ -44,6 +45,22 @@ async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,quanti
 }
 
 
+
+
+async function paymentMethod(){
+    const db=makeDblib.makeDb();
+
+    try{
+        const payment_method=await db.query("SELECT * FROM payment_method LIMIT 2");
+        return payment_method
+    }
+    catch(err){
+        return err
+    }
+    finally{
+        await db.close()
+    }
+}
 
 
 async function orderDetails(){
@@ -112,4 +129,4 @@ async function quantityDecrement(id){
     }
 }
 
-module.exports={placeOrder,orderDetails,quantityincrement,quantityDecrement,getUserData}
+module.exports={placeOrder,orderDetails,quantityincrement,quantityDecrement,getUserData,paymentMethod}

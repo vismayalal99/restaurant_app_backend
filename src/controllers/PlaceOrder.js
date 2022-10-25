@@ -11,13 +11,14 @@ async function placeOrder(req,res){
     const menuItem=req.body.menuItem;
     const price=req.body.price;
     const quantity=req.body.quantity;
-    const section=req.body.section
+    const section=req.body.section;
+    const payment=req.body.value
    
     try{
        
         if(firstName !="" && lastName !="" && email !="" && phoneNo !="" && menuItem !="" && price !="" && quantity !=""){
             
-            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItem,price,quantity,section);
+            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItem,price,payment,quantity,section,);
            
             if(data){
             return res.status(200).send({success:true,message:"Order Placed"})
@@ -47,13 +48,14 @@ async function orderAll(req,res){
     const email=req.body.email;
     const phoneNo=req.body.phoneNo;
     const menuItems=req.body.cartDatas;
-    const total=req.body.total
+    const total=req.body.total;
+    const payment=req.body.payment
    
     try{
        
         if(firstName !="" && lastName !="" && email !="" && phoneNo !="" && menuItems !="" ){
             
-            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItems,total)
+            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItems,total,payment)
             console.log("data"+data);
            
             if(data){
@@ -90,6 +92,19 @@ async function orderDetails(req,res){
 
 }
 
+
+
+async function paymentMethod(req,res){
+
+    try{
+        const data=await order.paymentMethod()
+        return res.status(200).send({success:true,message:"success",data:data})
+    }
+    catch(err){
+        return res.status(500).send({success:false,message:err})
+    }
+
+}
 
 async function quantityIncrement(req,res){
     const id=req.body.id
@@ -131,4 +146,4 @@ async function getUserData(req,res){
 }
 
 
-module.exports={placeOrder,orderDetails,quantityIncrement,quantityDecrement,orderAll,getUserData}
+module.exports={placeOrder,orderDetails,quantityIncrement,quantityDecrement,orderAll,getUserData,paymentMethod}

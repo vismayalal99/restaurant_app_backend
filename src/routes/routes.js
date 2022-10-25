@@ -32,7 +32,7 @@ router.delete('/images/delete',imageSlider.deleteImage);
 
 // ---------- MENU & CART --------------
 
-router.get('/startersmenu',menuItems.startersMenu);
+
 
 router.get('/mainmenu',menuItems.mainMenu);
 
@@ -60,7 +60,9 @@ router.delete('/deletemenuitem',menuItems.deleteMenu)
 
 //------- ORDER ----------------
 
-router.post('/placeorder',order.placeOrder)
+router.post('/placeorder',order.placeOrder);
+
+router.get('/getpaymentmethod',order.paymentMethod)
 
 router.get('/orderDetails',order.orderDetails);
 
