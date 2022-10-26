@@ -5,7 +5,8 @@ const authRoute=require("../controllers/auth");
 const imageSlider=require("../controllers/imageSlider");
 const images=require("../middleware/imageSlider");
 const menuItems=require("../controllers/foodMenu");
-const order=require("../controllers/placeOrder")
+const order=require("../controllers/placeOrder");
+const ordersData=require("../controllers/Orders")
 
 
 // ------------ Authentication -------
@@ -72,6 +73,10 @@ router.patch('/cart/quantitydecrement',order.quantityDecrement);
 
 router.post('/orderall',order.orderAll);
 
-router.get('/getuserdata',order.getUserData)
+router.get('/getuserdata',order.getUserData);
+
+router.get('/orders',ordersData.getOrders);
+
+router.delete('/orders',ordersData.cancelOrders)
 
 module.exports=router

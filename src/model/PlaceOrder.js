@@ -3,11 +3,12 @@ const makeDblib=require("../library/db");
 
 
 
-async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,payment,quantity,section){
+async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,payment,user_id,quantity,section,image,menuId){
     const db=makeDblib.makeDb();
-    const total =price* quantity
+    const total =price* quantity;
+    console.log(user_id);
     try{
-       
+       console.log(menuItem);
         const  customerData=await db.query("SELECT * FROM customer_data WHERE email_address = ? AND phone_no = ? ",[email,phoneNo]);
       
         if(customerData.length == 0){
@@ -22,13 +23,13 @@ async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,paymen
         if(section =="buyNowItems"){
             const order = await db.query("INSERT INTO orders (customer_id,total_amount,payment_method_id)VALUES(?,?,?)",[customer_id,total,parseInt(payment)]);
            
-            const orderDetails= await db.query("INSERT INTO order_details(order_id,customer_name,item_name,quantity,amount,payment_methods) VALUES(?,?,?,?,?,?)",
-                                                [order.insertId, customer_name,menuItem,quantity,price,paymentMethod[0].method] )
+            const orderDetails= await db.query("INSERT INTO order_details(order_id,user_id,menu_id,customer_name,item_name,quantity,amount,payment_methods,image) VALUES(?,?,?,?,?,?,?,?,?)",
+                                                [order.insertId,user_id,menuId, customer_name,menuItem,quantity,price,paymentMethod[0].method,image])
         }
         else{
             const order = await db.query("INSERT INTO orders (customer_id,total_amount,payment_method_id)VALUES(?,?,?)",[customer_id,price,parseInt(payment)]);
-            const orderDetails= await db.query("INSERT INTO order_details(order_id,customer_name,item_name,quantity,amount,payment_methods) VALUES ?",
-            [menuItem.map(item => [order.insertId,customer_name, item.name,item.quantity,item.price,paymentMethod[0].method])]);
+            const orderDetails= await db.query("INSERT INTO order_details(order_id,user_id,menu_id,customer_name,item_name,quantity,amount,payment_methods,image) VALUES ?",
+            [menuItem.map(item => [order.insertId,user_id,item.menu_id, customer_name, item.name,item.quantity,item.price,paymentMethod[0].method,item.image])]);
 
         }
 
@@ -36,7 +37,7 @@ async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,paymen
     }
     catch(err){
         console.log(err);
-        return true
+        return false
     }
 
     finally{
