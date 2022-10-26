@@ -12,13 +12,17 @@ async function placeOrder(req,res){
     const price=req.body.price;
     const quantity=req.body.quantity;
     const section=req.body.section;
-    const payment=req.body.value
+    const payment=req.body.value;
+    const user_id=req.body.user_id;
+    console.log(user_id);
+    const image=req.body.image;
+    const menuId=req.body.menuId
    
     try{
        
         if(firstName !="" && lastName !="" && email !="" && phoneNo !="" && menuItem !="" && price !="" && quantity !=""){
             
-            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItem,price,payment,quantity,section,);
+            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItem,price,payment,user_id,quantity,section,image,menuId);
            
             if(data){
             return res.status(200).send({success:true,message:"Order Placed"})
@@ -49,13 +53,16 @@ async function orderAll(req,res){
     const phoneNo=req.body.phoneNo;
     const menuItems=req.body.cartDatas;
     const total=req.body.total;
-    const payment=req.body.payment
+    const payment=req.body.payment;
+    const user_id=req.body.user_id;
+    console.log(user_id);
+
    
     try{
        
         if(firstName !="" && lastName !="" && email !="" && phoneNo !="" && menuItems !="" ){
             
-            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItems,total,payment)
+            const data =await order.placeOrder(firstName,lastName,email,phoneNo,menuItems,total,payment,user_id)
             console.log("data"+data);
            
             if(data){
