@@ -23,13 +23,14 @@ async function getMainMenuItems(){
 
 
 
-async function addToCart(user_id,menu_id,image,name,price,quantity,availability){
+async function addToCart(user_id,menu_id,quantity){
     console.log(user_id);
     const db=makeDblib.makeDb();
 
     try{
-        const menuItem= await db.query("INSERT INTO cart(user_id,menu_id,image,name,price,quantity,availability) VALUES(?,?,?,?,?,?,?)",[user_id,menu_id,image,name,price,quantity,availability]);
-        console.log(menuItem)
+     
+       const menuItem= await db.query("INSERT INTO cart(user_id,menu_id,quantity) VALUES(?,?,?)",[user_id,menu_id,quantity]);
+       console.log(menuItem)
         return menuItem
     }
     catch(err){
@@ -47,7 +48,8 @@ async function addToCart(user_id,menu_id,image,name,price,quantity,availability)
 async function getCartData(id){
     const db=makeDblib.makeDb();
     try{
-        const menuItem=await db.query("SELECT * FROM cart WHERE user_id=?",[id]);
+      
+        const menuItem=await db.query("SELECT cart.menu_id,menu_items.name,menu_items.price,menu_items.availability,cart.quantity,cart.id as id,menu_items.image,cart.user_id FROM menu_items JOIN cart ON menu_items.id = cart.menu_id WHERE user_id=?;",[id]);
         return menuItem
     }
     catch(err){
@@ -95,7 +97,7 @@ async function deleteCartDataAll(id){
 async function getmenuitems(){
     const db=makeDblib.makeDb();
     try{
-        const menuItems= await db.query("SELECT categories.id as c_id, categories.ctgy_name,menu_items.id,menu_items.name,menu_items.price,menu_items.availability,menu_items.image FROM categories RIGHT JOIN menu_items  ON categories.id = menu_items.category_id;  ")
+        const menuItems= await db.query("SELECT categories.id as c_id, categories.ctgy_name,menu_items.id,menu_items.name,menu_items.price,menu_items.availability,menu_items.quantities,menu_items.image FROM categories  JOIN menu_items  ON categories.id = menu_items.category_id;  ")
         return menuItems
     }
     catch(err){
@@ -126,11 +128,11 @@ async function getCategory(){
 
 
 
-async function addMenuItems(image,menuItem,price,category){
+async function addMenuItems(image,menuItem,price,category,quantity){
     const db=makeDblib.makeDb();
     const avail=1
     try{
-        const menu_items= await db.query("INSERT INTO menu_items(category_id,name,price,availability,image) VALUES(?,?,?,?,?)",[category,menuItem,price,avail,image])
+        const menu_items= await db.query("INSERT INTO menu_items(category_id,name,price,availability,quantities,image) VALUES(?,?,?,?,?,?)",[category,menuItem,price,avail,quantity,image])
         return menu_items
     }
     catch(err){
@@ -161,12 +163,13 @@ async function getEditMenu(id){
 }
 
 
-async function editMenu(id,image,menuItem,price,category,avail){
+async function editMenu(id,image,menuItem,price,category,avail,quantity){
     const db=makeDblib.makeDb();
+    console.log(quantity);
     try{
 
-        const menuItems=await db.query("UPDATE menu_items SET category_id = ?, name=?, price=?, availability=?, image=COALESCE(?,image) WHERE id=?",[category,menuItem,price,avail,image,id]);
-        const cartItem=await db.query("UPDATE cart SET name=?, price=?, availability=?, image=COALESCE(?,image) WHERE menu_id=?",[menuItem,price,avail,image,id]);
+        const menuItems=await db.query("UPDATE menu_items SET category_id = ?, name=?, price=?, availability=?,quantities=?, image=COALESCE(?,image) WHERE id=?",[category,menuItem,price,avail,quantity,image,id]);
+      
         console.log(menuItems);
   
         return true

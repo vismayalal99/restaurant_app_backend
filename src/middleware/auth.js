@@ -27,7 +27,7 @@ async function validateToken(req, res, next) {
   catch (err) {
     console.log("midd");
     console.log(err)
-    return res.status(500).json({success: false, message: err,data:"check" });
+    return res.status(500).json({success: false, message: err.message,data:"check" });
   }
 }
 

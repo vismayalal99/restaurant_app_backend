@@ -12,6 +12,14 @@ const fileDiskStorage=multer.diskStorage({
 });
 
 
-const upload=multer({storage:fileDiskStorage});
+const upload=multer({storage:fileDiskStorage,
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) { 
+       // upload only png and jpg format
+       return cb(new Error('Please upload a Image file'))
+     }
+   cb(undefined, true)
+}
+});
 
 module.exports={upload}

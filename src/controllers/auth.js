@@ -9,38 +9,21 @@ async function signup(req, res) {
     const password = req.body.password;
     const lastname=req.body.lastname;
     const phone=req.body.phone
-    let validateError = false;
+  
     console.log(username);
-    if (!username) {
-      res.status(400).send({ success: false, message: "Enter valid username" });
-      validateError = true;
-    }
-   else if (!email) {
-      res.status(400).send({ success: false, message: "Enter valid Email" });
-      validateError = true;
-    }
-
-   else if (!password) {
-      res.status(400).send({ success: false, message: "Enter valid Password" });
-      validateError = true;
-    }
-    else if (!lastname) {
-      res.status(400).send({ success: false, message: "Enter valid LastName" });
-      validateError = true;
-    }
-    else if (!phone) {
-      res.status(400).send({ success: false, message: "Enter valid PhoneNo" });
-      validateError = true;
+    if (!username || !email || !password || !lastname || !phone ) {
+      res.status(400).send({ success: false, message: "Enter valid Inputs" });
+     
     }
     
-    else if (!validateError) {
+    else  {
     const data=  await postData.signup(username, email, password,lastname,phone);
    
     if(data){
       return res.status(200).json({ success: true, message: "User is registered successfully"});
     }
     else{
-      return res.status(400).json({ success: false, message: "Email is alredy exist"});
+      return res.status(401).json({ success: false, message: "Email is alredy exist"});
     }
   }
 

@@ -28,7 +28,7 @@ async function placeOrder(req,res){
             return res.status(200).send({success:true,message:"Order Placed"})
             }
             else{
-                return res.status(400).send({success:false,message:"Invalid phoneNo & email"})
+                return res.status(400).send({success:false,message:"Something wrong"})
             }
         } 
         else{
@@ -69,7 +69,7 @@ async function orderAll(req,res){
                 return res.status(200).send({success:true,message:"Order Placed"})
                 }
                 else{
-                    return res.status(400).send({success:false,message:"Invalid phoneNo & email"})
+                    return res.status(400).send({success:false,message:"Something wrong"})
                 }
         } 
         else{
@@ -114,9 +114,10 @@ async function paymentMethod(req,res){
 }
 
 async function quantityIncrement(req,res){
-    const id=req.body.id
+    const id=req.body.id;
+    const menuId=req.body.menuId
     try{
-        const data=await order.quantityincrement(id)
+        const data=await order.quantityincrement(id,menuId)
         return res.status(200).send({success:true,message:"success"})
     }
     catch(err){
