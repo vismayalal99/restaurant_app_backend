@@ -6,7 +6,27 @@ const imageSlider=require("../controllers/imageSlider");
 const images=require("../middleware/imageSlider");
 const menuItems=require("../controllers/foodMenu");
 const order=require("../controllers/placeOrder");
-const ordersData=require("../controllers/Orders")
+const ordersData=require("../controllers/Orders");
+
+
+
+
+function uploadImage(req,res,next){
+
+    const uploadSingleImage=images.upload.single('img');
+
+    uploadSingleImage(req,res,function (err){
+        if(err){
+            return res.status(401).send({message:err.message})
+        }
+        else{
+        return next()
+        }
+    })
+
+}
+
+
 
 
 // ------------ Authentication -------
@@ -23,11 +43,11 @@ router.get('/getcontent',validateToken, authRoute.getData);
 
 router.get('/getimages',imageSlider.getImageData);
 
-router.post('/uploadimage',images.upload.single('img'), imageSlider.uploadImage);
+router.post('/uploadimage', uploadImage , imageSlider.uploadImage);
 
 router.get('/getimages/edit',imageSlider.getEditImage);
 
-router.patch('/images/edit',images.upload.single('img'), imageSlider.editImage);
+router.patch('/images/edit',uploadImage, imageSlider.editImage);
 
 router.delete('/images/delete',imageSlider.deleteImage);
 
@@ -41,7 +61,7 @@ router.post('/cart',menuItems.addToCart);
 
 router.get('/getcart',menuItems.getCartData);
 
-router.delete('/deletecart',menuItems.deleteCartData);
+router.delete('/deletecart',validateToken, menuItems.deleteCartData);
 
 router.delete('/deletecartall',menuItems.deleteCartDataAll);
 
@@ -50,18 +70,18 @@ router.get('/getmenuitems',menuItems.menu_items);
 
 router.get('/getcategory',menuItems.menuCategory);
 
-router.post('/addmenuitems',images.upload.single('img'), menuItems.addMenuItems);
+router.post('/addmenuitems',uploadImage, menuItems.addMenuItems);
 
 router.get('/geteditmenudata',menuItems.getEditMenu);
 
-router.patch('/editmenu',images.upload.single('img'), menuItems.editMenu);
+router.patch('/editmenu',uploadImage, menuItems.editMenu);
 
 router.delete('/deletemenuitem',menuItems.deleteMenu)
 
 
 //------- ORDER ----------------
 
-router.post('/placeorder',order.placeOrder);
+router.post('/placeorder',validateToken, order.placeOrder);
 
 router.get('/getpaymentmethod',order.paymentMethod)
 
@@ -71,12 +91,17 @@ router.patch('/cart/quantityincrement',order.quantityIncrement)
 
 router.patch('/cart/quantitydecrement',order.quantityDecrement);
 
-router.post('/orderall',order.orderAll);
+router.post('/orderall',validateToken, order.orderAll);
 
 router.get('/getuserdata',order.getUserData);
 
 router.get('/orders',ordersData.getOrders);
 
-router.delete('/orders',ordersData.cancelOrders)
+router.delete('/orders',validateToken, ordersData.cancelOrders)
+
+
+
+
+
 
 module.exports=router

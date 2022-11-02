@@ -1,4 +1,5 @@
 
+
 const makeDblib=require("../library/db");
 
 
@@ -6,9 +7,9 @@ const makeDblib=require("../library/db");
 async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,payment,user_id,quantity,section,image,menuId){
     const db=makeDblib.makeDb();
     const total =price* quantity;
-    console.log(user_id);
+  
     try{
-       console.log(menuItem);
+  
         const  customerData=await db.query("SELECT * FROM customer_data WHERE email_address = ? AND phone_no = ? ",[email,phoneNo]);
       
         if(customerData.length == 0){
@@ -19,18 +20,27 @@ async function placeOrder(firstName,lastName,email,phoneNo,menuItem,price,paymen
         const  customer_id= customerDetails[0].id
         const customer_name=customerDetails[0].first_name
         const paymentMethod = await db.query("SELECT method FROM payment_method WHERE id=?",[parseInt(payment)]);
-       
+ 
         if(section =="buyNowItems"){
             const order = await db.query("INSERT INTO orders (customer_id,total_amount,payment_method_id)VALUES(?,?,?)",[customer_id,total,parseInt(payment)]);
            
             const orderDetails= await db.query("INSERT INTO order_details(order_id,user_id,menu_id,customer_name,item_name,quantity,amount,payment_methods,image) VALUES(?,?,?,?,?,?,?,?,?)",
                                                 [order.insertId,user_id,menuId, customer_name,menuItem,quantity,price,paymentMethod[0].method,image])
-        }
+        
+            const quantityUpdate=await db.query("UPDATE menu_items SET quantities = quantities - ? WHERE id =?",[quantity,menuId]);
+            await db.query("UPDATE menu_items SET availability = 0 WHERE quantities = 0;")
+            }
         else{
             const order = await db.query("INSERT INTO orders (customer_id,total_amount,payment_method_id)VALUES(?,?,?)",[customer_id,price,parseInt(payment)]);
             const orderDetails= await db.query("INSERT INTO order_details(order_id,user_id,menu_id,customer_name,item_name,quantity,amount,payment_methods,image) VALUES ?",
             [menuItem.map(item => [order.insertId,user_id,item.menu_id, customer_name, item.name,item.quantity,item.price,paymentMethod[0].method,item.image])]);
 
+            var queries=""
+            menuItem.forEach(function (item) {
+                queries +=`UPDATE menu_items SET quantities = quantities - ${item.quantity} WHERE id =${item.menu_id};`
+            });
+            await db.query(queries);
+            await db.query("UPDATE menu_items SET availability = 0 WHERE quantities = 0;")
         }
 
         return customerData
@@ -81,11 +91,13 @@ async function orderDetails(){
 
 
 
-async function quantityincrement(id){
+async function quantityincrement(id,menuId){
     const db=makeDblib.makeDb();
 
     try{
-        const quantity=await db.query("UPDATE cart SET quantity=quantity+1 WHERE quantity <10 AND  id=?",[id]);
+        const quan=await db.query("SELECT quantities FROM menu_items WHERE id =?",[menuId])
+
+        const quantity=await db.query("UPDATE cart SET quantity=quantity+1 WHERE quantity < ? AND  id=?",[quan[0].quantities,id]);
         return quantity
     }
     catch(err){

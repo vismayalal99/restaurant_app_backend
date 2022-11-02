@@ -16,6 +16,7 @@ async function getImageData(req, res) {
 
 
   async function uploadImage(req,res){
+    console.log("inside controller");
    
     try{
      

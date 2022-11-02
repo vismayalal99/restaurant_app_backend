@@ -1,4 +1,7 @@
 const menu_item=require("../model/foodMenu")
+const img=require("../middleware/imageSlider")
+
+
 
  async function mainMenu(req,res){
     console.log("test");
@@ -20,19 +23,12 @@ const menu_item=require("../model/foodMenu")
 
   async function addToCart(req,res){
 
-     console.log(req.body.data);
-    
-     const image=req.body.data.image
-     const name=req.body.data.name
-     const price=req.body.data.price;
      const quantity=req.body.quantity;
      const menu_id=req.body.data.id;
-     console.log(quantity);
-     const avail=req.body.data.availability;
      const user_id=req.body.id
-     console.log(user_id);
+    
     try{
-      const data=await menu_item.addToCart(user_id,menu_id, image,name,price,quantity,avail)
+      const data=await menu_item.addToCart(user_id,menu_id,quantity)
       return res.status(200).send({success:true,message:"Item added to Cart"})
     }
 
@@ -126,13 +122,14 @@ async function addMenuItems(req,res){
     const image=req.file.originalname;
     const menuItem =req.body.menuItem;
     const price =req.body.price;
-    const category=req.body.category
+    const category=req.body.category;
+    const quantity=req.body.quantity
     
-    console.log(image,menuItem,price,category);
+    console.log(image,menuItem,price,category,quantity);
     
     if(image!="" && menuItem !="" && price !="" && category !=""){
       
-    const data= await menu_item.addMenuItems(image,menuItem,price,category);
+    const data= await menu_item.addMenuItems(image,menuItem,price,category,quantity);
     return res.status(200).send({success:true,message:"MenuItem Uploaded succesfully",data:data})
     
   }
@@ -169,6 +166,8 @@ async function editMenu(req,res){
   const price =req.body.price;
   const category=req.body.category;
   const avail=req.body.avail;
+  const quantity=req.body.quantity;
+  console.log("quan",quantity);
   let img;
    
   if(!req.file){
@@ -179,12 +178,12 @@ async function editMenu(req,res){
   }
 
  try{
-    const data= await menu_item.editMenu(id,img,menuItem,price,category,avail)
+    const data= await menu_item.editMenu(id,img,menuItem,price,category,avail,quantity)
     return res.status(200).send({success:true,message:"MenuItem Updated Successfully"})
  
  }
  catch(err){
-   console.log(err);
+ 
      return res.status(500).send({success:false,message:err});
  }
 }
