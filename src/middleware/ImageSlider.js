@@ -7,7 +7,7 @@ const fileDiskStorage=multer.diskStorage({
     },
     filename:(req,file,cb)=>{
       console.log(file);
-        cb(null,file.originalname)
+        cb(null,file.fieldname + '-' + Date.now() )
     },
 });
 

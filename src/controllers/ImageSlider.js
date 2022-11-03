@@ -17,10 +17,11 @@ async function getImageData(req, res) {
 
   async function uploadImage(req,res){
     console.log("inside controller");
+    console.log(req.file.filename)
    
     try{
      
-        const data =await imageSlider.addImageData(req.file.originalname)
+        const data =await imageSlider.addImageData(req.file.filename)
         return res.status(200).send({success:true,message:"Successfully Uploaded"})
 
     }
@@ -49,7 +50,7 @@ async function getImageData(req, res) {
   async function editImage(req,res){
      
     try{
-       const data= await imageSlider.editImage(req.query.id,req.file.originalname)
+       const data= await imageSlider.editImage(req.query.id,req.file.filename)
        console.log(data);
        return res.status(200).send({success:true,message:"Successfully Updated"})
 
