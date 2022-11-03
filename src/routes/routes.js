@@ -14,8 +14,10 @@ const ordersData=require("../controllers/Orders");
 function uploadImage(req,res,next){
 
     const uploadSingleImage=images.upload.single('img');
-
+    
+   
     uploadSingleImage(req,res,function (err){
+        console.log("check",req.file.filename);
         if(err){
             return res.status(401).send({message:err.message})
         }

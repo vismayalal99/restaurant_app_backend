@@ -119,7 +119,7 @@ const img=require("../middleware/imageSlider")
 async function addMenuItems(req,res){
 
   try{
-    const image=req.file.originalname;
+    const image=req.file.filename;
     const menuItem =req.body.menuItem;
     const price =req.body.price;
     const category=req.body.category;
@@ -174,7 +174,7 @@ async function editMenu(req,res){
      img=null
   }
   else{
-    img = req.file.originalname
+    img = req.file.filename
   }
 
  try{
